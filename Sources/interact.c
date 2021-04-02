@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "../Headers/inform.h"
 
 //Create dynamic matrix and get data from console
@@ -35,6 +36,65 @@ double** ScanMatrix(int * MatrixSize)
     }
     return pMatrix;
 }
+//Create dynamic matrix and get data from file
+//Parameters: pointer to real matrix size
+//Return: pointer to matrix
+double** FileScanMatrix(int *MatrixSize)
+{
+    double **pMatrix, *TempData, temp;
+    extern FILE *fp;
+    if (PrepareFile()!=0)                                               //If file hasn't opened successfully stop program with an error
+        return NULL;
+    *MatrixSize = 0;
+    TempData = (double *)malloc(sizeof(double ));                       //Temporary array for all numbers from file
+    if (!TempData)
+    {
+        printf("Not enough memory!\n");
+        return NULL;
+    }
+    do {                                                                //Get values to temp array
+        if (fscanf(fp,"%lf",&temp) != 1)
+        {
+            if(feof(fp))
+                break;
+            else
+            {
+                fscanf(fp,"%*s");
+                continue;
+            }
+        }
+        (*MatrixSize)++;
+        TempData = (double *)realloc(TempData,(*MatrixSize)*sizeof(double ));
+        if (!TempData)
+        {
+            printf("Not enough memory!\n");
+            return NULL;
+        }
+        TempData[(*MatrixSize)-1] = temp;
+    } while (1);
+    *MatrixSize = (int)sqrt(*MatrixSize);                                //Calc a number of rows and columns
+    pMatrix = (double **)malloc((*MatrixSize)*sizeof (double *));    //Init memory for array of the pointers to rows of the matrix
+    if (!pMatrix)
+    {
+        printf("Not enough memory!\n");
+        return NULL;
+    }
+    for (int i = 0; i < *MatrixSize; ++i)                                   //Init memory for elements in rows
+    {
+        pMatrix[i] = (double *)malloc((*MatrixSize)*sizeof (double ));
+        if (!*(pMatrix+i))
+        {
+            printf("Not enough memory!\n");
+            FreeMemory(pMatrix, i);
+            return NULL;
+        }
+    }
+    for (int i = 0, t = 0; i < *MatrixSize; ++i)                           //Exchange of values
+        for (int j = 0; j < *MatrixSize; ++j, t++)
+            pMatrix[i][j] = TempData[t];
+    free(TempData);
+    return pMatrix;
+}
 //Print matrix to console
 //Parameters: pointers to matrix and real matrix size
 //Return: pointer to start of the matrix
@@ -53,7 +113,10 @@ double** PrintMatrix(double **matrix,int size)
 //Parameters: pointers to matrix and real matrix size
 void FreeMemory(double **matrix,int size)
 {
-    for (double ** p = matrix; p < matrix+size; p++)        //Clear memory of the rows
-        free(*p);
-    free(matrix);                                           //Delete the array of pointers
+    if (size != 0)
+    {
+        for (double ** p = matrix; p < matrix+size; p++)        //Clear memory of the rows
+            free(*p);
+        free(matrix);                                           //Delete the array of pointers
+    }
 }
