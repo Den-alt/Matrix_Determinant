@@ -6,6 +6,7 @@ set(CMAKE_C_STANDARD 99)
 set(SOURCES
         Sources/interact.c
         Sources/file.c
+        Sources/calculus.c
 )
 
 set(HEADERS

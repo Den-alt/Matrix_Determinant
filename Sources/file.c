@@ -3,7 +3,7 @@
 #include "../Headers/inform.h"
 
 #define SIZE 200
-FILE *fp;               //Pointer to stream
+FILE *fp = NULL;               //Pointer to stream
 
 //Open file stream
 //Parameters: pointer to the path of the user file
@@ -31,5 +31,6 @@ int PrepareFile()
 //Close all files opened in program
 void CloseFiles()
 {
-    fclose(fp);
+    if (fp != NULL)
+        fclose(fp);
 }
