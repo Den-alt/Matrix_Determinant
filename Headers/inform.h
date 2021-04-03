@@ -3,12 +3,6 @@
 
 // Path to demo file:
 // ../matrix_data.txt
-/*
- 1 2 1 3
- 2 1 4 1
- 3 3 2 -1
- 4 2 2 -1
-  */
 
 //interact.c
 double** ScanMatrix(int *);

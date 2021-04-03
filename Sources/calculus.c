@@ -32,16 +32,10 @@ double Decomposition(double **matrix, int size)
                     minor[j][k] = *p;
                 }
             }
-            PrintMatrix(minor, size - 1);
             if ( ((i+1) & 1) == 0)                                  //Check the power of multiplier (-1)
-            {
                 result += -matrix[0][i] * Decomposition(minor, size - 1);
-                printf("\t%.2lf",result);
-            } else
-            {
+            else
                 result += matrix[0][i] * Decomposition(minor, size - 1);
-                printf("\t%.2lf",result);
-            }
         }
         FreeMemory(minor, size-1);
     }
