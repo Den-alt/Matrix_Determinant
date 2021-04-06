@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "../Headers/inform.h"
 
+//Decompose matrix and calc the determinant
+//Parameters: matrix and number of the elements
+//Return: determinant
 double Decomposition(double **matrix, int size)
 {
     double result = 0;
